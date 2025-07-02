@@ -1,0 +1,14 @@
+version: "3"
+
+tasks:
+  run-redis:
+    desc: Start redis container
+    cmds:
+      - echo Starting redis container
+      - |
+        docker run -d \
+          --name my-redis \
+          -v redis-data:/data \
+          -p 6379:6379 \
+          --restart unless-stopped \
+          redis:alpine3.21

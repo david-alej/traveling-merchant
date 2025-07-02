@@ -1,0 +1,24 @@
+version: "3"
+
+tasks:
+  create-container-network:
+    desc: Create db network
+    cmds:
+      - echo Creating db network
+      - docker network create {{.BACKEND_NETWORK}}
+
+  run-postgres:
+    desc: Start postgres container
+    cmds:
+      - echo Starting postgres container
+      - |
+        docker run -d \
+          --name db \
+          --network {{.BACKEND_NETWORK}} \
+          -e POSTGRES_USER={{.DB_USER}} \
+          -e POSTGRES_PASSWORD={{.DB_PASSWORD}} \
+          -e POSTGRES_DB={{.DB_NAME}} \
+          -v pgdata:/var/lib/postgresql/data \
+          -p 5432:5432 \
+          --restart unless-stopped \
+          postgres:17.5-alpine
