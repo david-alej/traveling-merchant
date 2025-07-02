@@ -27,7 +27,6 @@ tasks:
         docker run -d \
           --name migrations \
           --network {{.BACKEND_NETWORK}} \
-          --env-file ./.env \
           -e DATABASE_URL={{.CONTAINER_DB_URL}} \
           {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
           npm run prod-migration
