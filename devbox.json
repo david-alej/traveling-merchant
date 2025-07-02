@@ -16,7 +16,7 @@
     "kubent@latest",
     "kubernetes-helm@latest",
     "kustomize@latest",
-    "nodejs_20@latest",
+    "nodejs@22",
     "oras@latest",
     "procps",
     "tilt@latest"

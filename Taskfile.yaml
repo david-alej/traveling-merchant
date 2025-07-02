@@ -1,0 +1,14 @@
+version: "3"
+
+includes:
+  kind:
+    taskfile: ./kind/Taskfile.yaml
+    dir: ./kind
+  app:
+    taskfile: ./app/Taskfile.yaml
+    dir: ./app
+    vars:
+      IMAGE_TAG: prod
+      DB_USER: merchant
+      DB_PASSWORD: foobarbaz
+      DB_NAME: db
