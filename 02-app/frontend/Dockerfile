@@ -13,7 +13,7 @@ COPY . .
 RUN npm run build
 
 
-FROM nginxinc/nginx-unprivileged:stable-alpine3.21-perl
+FROM nginxinc/nginx-unprivileged:alpine3.22-otel
 
 COPY --link nginx.conf /etc/nginx/conf.d/default.conf
 

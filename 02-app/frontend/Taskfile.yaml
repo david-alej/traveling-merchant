@@ -16,12 +16,28 @@ tasks:
           --push \
           .
 
-  install:
+  run:
+    desc: Docker run nginx frontend.
+    cmds:
+      - |
+        docker run -d \
+          --name nginx-frontend \
+          -p 8081:8080 \
+          {{.IMAGE_REPO}}:{{.IMAGE_TAG}}
+
+  delete:
+    desc: Docker stop and remove frontend container.
+    cmds:
+      - |
+        docker stop nginx-frontend
+        docker rm nginx-frontend
+
+  local-install:
     desc: install dependencies
     cmds:
       - npm install
 
-  run:
+  local-run:
     desc: Start react client
     cmds:
       - npm run dev

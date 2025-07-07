@@ -12,7 +12,7 @@ export const tagTypes = [
 
 export const rootSplitApi = createApi({
   baseQuery: fetchBaseQuery({
-    baseUrl: "/api",
+    baseUrl: "/backend",
     tagTypes,
     keepUnusedDataFor: 10,
     prepareHeaders: (headers, { getState }) => {

@@ -1,8 +1,6 @@
 services:
   frontend-nginx:
-    image: tm-frontend-nginx
-    build:
-      context: ./frontend/
+    image: davidalej/traveling-merchant-frontend:prod
     init: true
     networks:
       - frontend
@@ -10,9 +8,7 @@ services:
       - 8081:8080
     restart: unless-stopped
   backend:
-    image: tm-backend
-    build:
-      context: ./backend/
+    image: davidalej/traveling-merchant-backend:prod
     init: true
     depends_on:
       migrate:
@@ -33,7 +29,7 @@ services:
       - 3000:3000
     restart: unless-stopped
   migrate:
-    image: tm-backend
+    image: davidalej/traveling-merchant-backend:prod
     depends_on:
       db:
         condition: service_healthy
