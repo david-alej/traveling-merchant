@@ -8,7 +8,7 @@ includes:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
     vars:
-      IMAGE_REPO: davidalej/traveling-merchnat-frontend
+      IMAGE_REPO: davidalej/traveling-merchant-frontend
 
   backend:
     taskfile: ./backend/Taskfile.yaml
@@ -38,3 +38,13 @@ tasks:
     desc: Run a local registry
     cmds:
       - docker run -d -p 5000:5000 registry:2.8
+
+  docker-compose-up:
+    desc: Start docker compose full-stack application.
+    cmds:
+      - docker compose up --build
+
+  docker-compose-down:
+    desc: Remove docker compose full-stack application.
+    cmds:
+      - docker compose down
