@@ -1,6 +1,12 @@
 version: "3"
 
 vars:
+  IMAGE_TAG: prod
+  DB_USER: merchant
+  DB_PASSWORD: foobarbaz
+  DB_NAME: db
+  FRONTEND_IMAGE_REPO: davidalej/traveling-merchant-frontend
+  BACKEND_IMAGE_REPO: davidalej/traveling-merchant-backend
   BACKEND_NETWORK: backend-network
 
 includes:
@@ -23,8 +29,6 @@ includes:
   redis:
     taskfile: ./redis/Taskfile.yaml
     dir: ./redis
-    vars:
-      IMAGE_REPO: davidalej/traveling-merchant-db-migrator
 
 tasks:
   bootstrap-buildx-builder:
@@ -38,6 +42,19 @@ tasks:
     desc: Run a local registry
     cmds:
       - docker run -d -p 5000:5000 registry:2.8
+
+  generate-docker-compose:
+    desc: Generate docker compose with task variables.
+    cmds:
+      - |
+        FRONTEND_IMAGE={{.FRONTEND_IMAGE_REPO}}:{{.IMAGE_TAG}} \
+          BACKEND_IMAGE={{.BACKEND_IMAGE_REPO}}:{{.IMAGE_TAG}} \
+          POSTGRES_USER={{.DB_USER}} \
+          POSTGRES_PASSWORD={{.DB_PASSWORD}} \
+          POSTGRES_DB={{.DB_NAME}} \
+          DB_URL=postgres://{{.DB_USER}}:{{.DB_PASSWORD}}@db:5432/{{.DB_NAME}} \
+          envsubst < docker-compose.yaml.TEMPLATE \
+          > docker-compose.yaml
 
   up:
     desc: Start docker compose full-stack application.

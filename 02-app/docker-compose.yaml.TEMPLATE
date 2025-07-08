@@ -1,6 +1,6 @@
 services:
   frontend-nginx:
-    image: davidalej/traveling-merchant-frontend:prod
+    image: ${FRONTEND_IMAGE}
     init: true
     networks:
       - frontend
@@ -8,7 +8,7 @@ services:
       - 8081:8080
     restart: unless-stopped
   backend:
-    image: davidalej/traveling-merchant-backend:prod
+    image: ${BACKEND_IMAGE}
     init: true
     depends_on:
       migrate:
@@ -20,7 +20,7 @@ services:
     env_file:
       - ./backend/.env
     environment:
-      DATABASE_URL: postgres://prod_user:prod_password@db:5432/prod_db
+      DATABASE_URL: ${DB_URL}
       REDIS_HOST: my-redis
     networks:
       - frontend
@@ -29,13 +29,13 @@ services:
       - 3000:3000
     restart: unless-stopped
   migrate:
-    image: davidalej/traveling-merchant-backend:prod
+    image: ${BACKEND_IMAGE}
     depends_on:
       db:
         condition: service_healthy
     command: ["sh", "-c", "npm run seed:migrate:reset"]
     environment:
-      DATABASE_URL: postgres://prod_user:prod_password@db:5432/prod_db
+      DATABASE_URL: ${DB_URL}
       NODE_ENV: production
     networks:
       - backend
@@ -45,11 +45,11 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
     environment:
-      POSTGRES_USER: prod_user
-      POSTGRES_PASSWORD: prod_password
-      POSTGRES_DB: prod_db
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U prod_user -d prod_db"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 3s
       retries: 10
