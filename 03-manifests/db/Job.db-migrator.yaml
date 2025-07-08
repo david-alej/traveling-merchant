@@ -1,0 +1,16 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: db-migrator
+  namespace: traveling-merchant
+spec:
+  template:
+    spec:
+      containers:
+        - name: migrate
+          image: davidalej/traveling-merchant-backend:prod
+          command: ["npm", "run", "prod-migration"]
+          envFrom:
+            - secretRef:
+                name: db-password
+      restartPolicy: OnFailure

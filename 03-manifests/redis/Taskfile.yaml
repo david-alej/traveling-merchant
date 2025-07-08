@@ -1,0 +1,12 @@
+version: "3"
+
+tasks:
+  install-redis:
+    desc: "Deploy Redis using Helm"
+    cmds:
+      - |
+        helm upgrade --install \
+          -n redis \
+          redis bitnami/redis \
+          --version 21.2.6 \
+          --create-namespace

@@ -1,0 +1,22 @@
+version: "3"
+
+tasks:
+  install-postgres:
+    desc: "Deploy PostgreSQL using Helm"
+    cmds:
+      - |
+        helm upgrade --install \
+          -n postgres \
+          postgres bitnami/postgresql \
+          --set auth.database=db \
+          --set auth.username=merchant \
+          --set auth.password=foobarbaz \
+          --version 16.7.15 \
+          --values values.yaml \
+          --create-namespace
+
+  apply-initial-db-migration-job:
+    desc: "Run init.sql script against the DB"
+    cmds:
+      - "kubectl apply -f Secret.db-password.yaml"
+      - "kubectl apply -f Job.db-migrator.yaml"

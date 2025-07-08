@@ -12,3 +12,6 @@ includes:
       DB_USER: merchant
       DB_PASSWORD: foobarbaz
       DB_NAME: db
+  manifests:
+    taskfile: ./03-manifests/Taskfile.yaml
+    dir: ./03-manifests

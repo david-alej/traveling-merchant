@@ -1,0 +1,51 @@
+version: "3"
+
+tasks:
+  apply-namespace:
+    desc: "Apply Kubernetes Namespace"
+    cmds:
+      - kubectl apply -f Namespace.yaml
+      - kubens traveling-merchant
+
+  install-nginx-gateway:
+    desc: "Install NGINX Gateway API resources using kustomize"
+    cmds:
+      - kubectl kustomize "https://github.com/nginx/nginx-gateway-fabric/config/crd/gateway-api/standard?ref=v1.6.2" | kubectl apply -f -
+
+  deploy-fabric:
+    desc: "Deploy Fabric, an NGINX Gateway controller, using Helm"
+    cmds:
+      - |
+        helm upgrade --install \
+          -n nginx-gateway \
+          ngf oci://ghcr.io/nginx/charts/nginx-gateway-fabric \
+          --set gateway.controller.watchNamespace="traveling-merchant" \
+          --version 2.0.1 \
+          --create-namespace
+
+  deploy-metallb:
+    desc: "Deploy MetalLB, a load-balancer hooked into the cluster for bare metal, using Helm"
+    cmds:
+      - |
+        helm repo add metallb https://metallb.github.io/metallb
+        helm upgrade --install \
+          -n metallb \
+          metallb metallb/metallb \
+          --version 0.15.2 \
+          --create-namespace
+
+  apply-metallb:
+    desc: "Apply MetalLB config"
+    cmds:
+      - kubectl apply -f metallb-config.yaml
+
+  apply-gateway-api:
+    desc: "Apply Manifests for Gateway API"
+    cmds:
+      - kubectl apply -f HTTPRoute.yaml
+      - kubectl apply -f Gateway.yaml
+
+  port-forward:
+    desc: "Port forward the MetalLB LoadBalancer Service"
+    cmds:
+      - kubectl port-forward svc/my-gateway-nginx 8080:80

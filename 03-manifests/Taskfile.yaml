@@ -1,0 +1,47 @@
+version: "3"
+
+includes:
+  common:
+    taskfile: ./common/Taskfile.yaml
+    dir: ./common
+  db:
+    taskfile: ./db/Taskfile.yaml
+    dir: ./db
+  redis:
+    taskfile: ./redis/Taskfile.yaml
+    dir: ./redis
+
+tasks:
+  helm-add-bitnami-repo:
+    desc: "Add bitnami repository to your local helm repository"
+    cmds:
+      - helm repo add bitnami https://charts.bitnami.com/bitnami
+
+  backend:apply:
+    desc: "Apply kubernetes resource manifests for backend application"
+    cmds:
+      - "kubectl apply -f ./backend"
+
+  backend:port-forward:
+    desc: "Port forward backend service to localhost:3000"
+    cmds:
+      - "kubectl port-forward svc/backend 3000"
+
+  frontend:apply:
+    desc: "Apply kubernetes resource manifests for frontend application"
+    cmds:
+      - "kubectl apply -f ./frontend"
+
+  apply-all:
+    - task: helm-add-bitnami-repo
+    - task: common:apply-namespace
+    - task: db:install-postgres
+    - task: db:apply-initial-db-migration-job
+    - task: redis:install-redis
+    - task: common:install-nginx-gateway
+    - task: common:deploy-fabric
+    - task: common:deploy-metallb
+    - task: common:apply-metallb
+    - task: common:apply-gateway-api
+    - task: backend:apply
+    - task: frontend:apply
