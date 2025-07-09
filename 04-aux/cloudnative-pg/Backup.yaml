@@ -1,0 +1,8 @@
+apiVersion: postgresql.cnpg.io/v1
+kind: Backup
+metadata:
+  name: now-0
+  namespace: 09--cnpg
+spec:
+  cluster:
+    name: cnpg-with-backup-config

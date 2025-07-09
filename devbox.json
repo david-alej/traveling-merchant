@@ -19,7 +19,8 @@
     "nodejs@22",
     "oras@latest",
     "procps",
-    "tilt@latest"
+    "tilt@latest",
+    "yq-go@latest"
   ],
   "shell": {
     "init_hook": [

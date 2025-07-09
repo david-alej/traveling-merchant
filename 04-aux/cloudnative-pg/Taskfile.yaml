@@ -1,0 +1,78 @@
+version: 3
+
+env:
+  BORDER: double
+  BORDER_FOREGROUND: "212"
+  PADDING: "1 1"
+  MARGIN: "1 1"
+  NAMESPACE: 09--cnpg
+
+tasks:
+  01-create-namespace:
+    desc: "Create a namespace for these examples and set as default"
+    cmds:
+      - kubectl apply -f Namespace.yaml
+      - kubens ${NAMESPACE}
+
+  02-install-cnpg-operator:
+    desc: "Install cloudnative-pg operator"
+    cmds:
+      - "helm repo add cnpg https://cloudnative-pg.github.io/charts"
+      - helm repo update
+      - |
+        helm upgrade --install cnpg cnpg/cloudnative-pg \
+          --namespace cnpg-system \
+          --version 0.23.2 \
+          --create-namespace
+
+  03-apply-minimal-cluster:
+    desc: "Apply minimal cnpg cluster definition"
+    cmds:
+      - kubectl apply -f Cluster.cnpg-minimal.yaml
+
+  04-install-minio:
+    desc: Install MinIO a s3 compatable storage to forward db backups to.
+    cmds:
+      - |
+        helm repo add bitnami https://charts.bitnami.com/bitnami
+        helm repo update
+
+        helm install minio bitnami/minio \
+          --namespace minio \
+          --set auth.rootUser=admin \
+          --set auth.rootPassword=admin123 \
+          --set defaultBuckets=cnpg-backups \
+          --set service.type=ClusterIP \
+          --create-namespace
+
+  05-apply-s3-credentials:
+    desc: Create a Secret for S3 Credentials
+    cmds:
+      - |
+        kubectl create secret generic minio-creds \
+          --from-literal=AWS_ACCESS_KEY_ID=admin \
+          --from-literal=AWS_SECRET_ACCESS_KEY=admin123
+
+  06-apply-cluster-with-backup-config-local:
+    desc: "Apply cnpg cluster definition with backup configuration"
+    cmds:
+      - cmd: gum style "🚨 This stores a small backup on local storage /tmp/cnpg-with-backup-config! 🚨 "
+        silent: true
+      - kubectl apply -f Cluster.cnpg-with-backup-config-local.yaml
+      - kubectl apply -f ScheduleBackup.yaml
+      - kubectl apply -f Backup.yaml
+
+  07-delete-namespace:
+    desc: "Delete the namespace to clean up"
+    cmds:
+      - cmd: gum style "🚨 Deleting the namespace recursively deletes the resources inside of it! 🚨 "
+        silent: true
+      - kubectl delete -f Namespace.yaml
+
+  99-purge-cnpg-minio:
+    desc: Delete cnpg operator, minio, and associated namespaces
+    cmds:
+      - helm uninstall cnpg -n cnpg-system
+      - kubectl delete namespace cnpg-system --wait
+      - helm uninstall minio -n minio
+      - kubectl delete namepsace minio --wait
