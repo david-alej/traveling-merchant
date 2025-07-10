@@ -1,0 +1,10 @@
+docker_build('davidalej/traveling-merchant-backend', '.',
+    # build_args={'node_env': 'development'},
+    # entrypoint='npm run dev',
+    live_update=[
+        sync('./src', '/usr/src/app/src'),
+        run('cd /usr/src/app && npm install', trigger=['./package.json', './package-lock.json']),
+])
+
+k8s_yaml(['../../03-manifests/backend/Deployment.yaml','../../03-manifests/backend/Service.yaml'])
+k8s_resource('backend')

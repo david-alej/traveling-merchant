@@ -17,6 +17,6 @@ FROM nginxinc/nginx-unprivileged:alpine3.22-otel
 
 COPY --link nginx.conf /etc/nginx/conf.d/default.conf
 
-COPY --link --from=build usr/src/app/dist/ /usr/share/nginx/html
+COPY --link --from=build /usr/src/app/dist/ /usr/share/nginx/html
 
 EXPOSE 8080

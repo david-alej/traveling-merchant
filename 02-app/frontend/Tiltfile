@@ -1,0 +1,19 @@
+# For better dev experience, change Dockerfile to make user to build dist/ before making docker image and includes ./src to dockerignore. Default to made image for more user friendly image of not needing to build dist/ beforehand.
+docker_build('davidalej/traveling-merchant-frontend', '.',
+    # build_args={'node_env': 'development'},
+    # entrypoint='npm run dev',
+    live_update=[
+        sync("./nginx.conf", "/etc/nginx/conf.d/default.conf"),
+        sync("./dist", "/usr/share/nginx/html"),
+])
+
+# local_resource(
+#     name='react-build',
+#     cmd='npm run build',
+#     deps=['./src', './package.json'],
+#     dir='.',
+#     resource_deps=['frontend']
+# )
+
+k8s_yaml(['../../03-manifests/frontend/Deployment.yaml','../../03-manifests/frontend/Service.yaml'])
+k8s_resource('frontend')

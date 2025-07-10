@@ -1,0 +1,17 @@
+version: "3"
+
+tasks:
+  up:
+    desc: "Start the applications using the top level tilt file"
+    cmds:
+      - tilt up
+
+  down:
+    desc: Stop the applications
+    cmds:
+      - tilt down
+
+  port-forward-gateway:
+    desc: Port forward gateway service (traveling-merchant.com:8080) to call forntend (/) and backend (/backend).
+    cmds:
+      - kubectl port-forward svc/my-gateway-nginx 8080:80
