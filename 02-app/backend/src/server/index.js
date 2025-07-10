@@ -23,8 +23,8 @@ app.use(express.static("public"))
 app.use(
   session({
     secret: process.env.COOKIES_SECRET,
-    resave: false,
-    saveUninitialized: false,
+    resave: false, //true,
+    saveUninitialized: false, //true,
     cookie: {
       maxAge: 1000 * 60 * 30,
       sameSite: "lax", //process.env.NODE_ENV === "production" ? "none" : "lax",
@@ -40,7 +40,7 @@ app.use(helmet())
 app.use(
   cors({
     credentials: true,
-    origin: "http://traveling-merchant.com",
+    origin: "http://localhost:5000",
     allowedHeaders: ["x-csrf-token", "content-type"],
   })
 )
