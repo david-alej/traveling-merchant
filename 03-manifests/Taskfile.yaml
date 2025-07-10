@@ -12,6 +12,18 @@ includes:
     dir: ./redis
 
 tasks:
+  faulty-pods:
+    desc: List all faulty pods
+    cmds:
+      - |
+        if kubectl get pods -A | grep -qE 'CrashLoopBackOff|Error'; then
+          echo "🚨 Crashing pods detected!"
+          kubectl get pods -A | grep -E 'CrashLoopBackOff|Error'
+          exit 1
+        else
+          echo "✅ All pods are healthy."
+        fi
+
   helm-add-bitnami-repo:
     desc: "Add bitnami repository to your local helm repository"
     cmds:
@@ -39,6 +51,7 @@ tasks:
     - task: db:apply-initial-db-migration-job
     - task: redis:install-redis
     - task: common:install-nginx-gateway
+    - sleep 1
     - task: common:deploy-fabric
     - task: common:deploy-metallb
     - task: common:apply-metallb
