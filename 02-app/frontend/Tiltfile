@@ -1,0 +1,22 @@
+# Commented are added code for a better dev experience with faster updates with Tilt but need dockerfile to exclude the building stage, have the user run "npm run build" before building image, and have dockerignore include ./src/. Another thing to be added it build_args to change enviroment that needs the docker file to include it.
+
+docker_build(
+  'davidalej/traveling-merchant-frontend', 
+  './',
+  # build_args={'node_env': 'development'},
+  live_update = [
+    # sync('./dist', '/usr/share/nginx/html'),
+    sync("./nginx.conf", "/etc/nginx/conf.d/default.conf"),
+  ]
+)
+
+# local_resource(
+#     name='react-build',
+#     cmd='npm run build',
+#     deps=['./src', './package.json'],
+#     dir='.',
+#     resource_deps=['frontend'],
+# )
+
+k8s_yaml(['../../03-manifests/frontend/Deployment.yaml', '../../03-manifests/frontend/Service.yaml'])
+k8s_resource('frontend')

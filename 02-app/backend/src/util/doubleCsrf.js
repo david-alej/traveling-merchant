@@ -8,8 +8,8 @@ const { invalidCsrfTokenError, generateToken, doubleCsrfProtection } =
     cookieName: process.env.CSRF_COOKIE_NAME,
     cookieOptions: {
       maxAge: 1000 * 60 * 30,
-      sameSite: process.env.NODE_ENV === "production", // ? "none" : "lax",
-      secure: process.env.NODE_ENV === "production",
+      sameSite: "lax", //process.env.NODE_ENV === "production" ? "none" : "lax",
+      secure: false, //process.env.NODE_ENV === "production",
       signed: true,
     },
   })
