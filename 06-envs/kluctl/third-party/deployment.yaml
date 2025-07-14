@@ -1,0 +1,8 @@
+deployments:
+  - path: redis
+  - path: ngf-namespace
+  - path: fabric
+  - path: metallb
+    when: "{{ args.environment == 'staging' }}"
+  - path: cloudnative-pg
+    waitReadiness: true

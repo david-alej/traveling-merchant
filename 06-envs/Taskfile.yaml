@@ -1,0 +1,11 @@
+version: "3"
+# Remember that hostname changes to "staging.traveling-merchant.com" and "traveling-merchant.com" depending on the environment being staging or production. You have to:
+
+# 1. check external ip for gateway api service
+# 2. Change/Add "<ip address> <hostname>" to /etc/hosts
+# 3. Search <hostname> in browser to access app.
+
+includes:
+  kluctl:
+    taskfile: ./kluctl/Taskfile.yaml
+    dir: ./kluctl

@@ -1,0 +1,37 @@
+version: "3"
+
+tasks:
+  helm-pull:
+    desc: "Pre-pull helm charts"
+    cmds:
+      - kluctl helm-pull
+
+  render-staging:
+    desc: "Render resource yaml with staging values"
+    cmds:
+      - kluctl render -t staging --print-all | yq
+
+  deploy-staging:
+    desc: "Deploy staging configuration"
+    cmds:
+      - kluctl deploy -t staging
+
+  delete-staging:
+    desc: "Render resource yaml with staging values"
+    cmds:
+      - kluctl delete -t staging
+
+  # render-production:
+  #   desc: "Render resource yaml with production values"
+  #   cmds:
+  #     - kluctl render -t production --print-all | yq
+
+  # deploy-production:
+  #   desc: "Deploy production configuration"
+  #   cmds:
+  #     - kluctl deploy -t production
+
+  # delete-production:
+  #   desc: "Render resource yaml with production values"
+  #   cmds:
+  #     - kluctl delete -t production

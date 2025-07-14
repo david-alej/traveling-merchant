@@ -1,0 +1,2 @@
+frontend:
+  version: prod # STAGING_IMAGE_TAG

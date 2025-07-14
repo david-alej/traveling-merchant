@@ -1,0 +1,7 @@
+helmChart:
+  repo: https://cloudnative-pg.github.io/charts
+  chartName: cloudnative-pg
+  chartVersion: 0.23.2
+  releaseName: cnpg
+  namespace: cnpg-system
+  output: helm-rendered.yaml
