@@ -7,6 +7,6 @@ tasks:
       - |
         helm upgrade --install \
           -n redis \
-          redis bitnami/redis \
+          redis-cache bitnami/redis \
           --version 21.2.6 \
           --create-namespace
