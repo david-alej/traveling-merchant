@@ -2,7 +2,6 @@ deployments:
   - include: postgres
   - barrier: true
   - include: local-lb
-    when: "{{ args.environment == 'staging' }}"
   - include: gateway
   - include: backend
   - include: frontend

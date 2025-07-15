@@ -3,7 +3,6 @@ deployments:
   - path: ngf-namespace
   - path: fabric
   - path: metallb
-    when: "{{ args.environment == 'staging' }}"
   - barrier: true
   - path: cloudnative-pg
     waitReadiness: true
