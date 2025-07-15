@@ -4,22 +4,27 @@ env:
   CLUSTER_NAME: traveling-merchant
 
 tasks:
-  01-generate-config:
+  1-generate-config:
     desc: "Generate kind config with local absolute paths for PV mounts"
     cmds:
       - REPLACE_WITH_ABSOLUTE_PATH=${PWD} envsubst < kind-config.yaml.TEMPLATE > kind-config.yaml
 
-  02-create-cluster:
-    desc: Create a Kubernetes cluster using kind
+  staging:1-create-cluster:
+    desc: Create a Kubernetes cluster for staging using kind
     cmds:
-      - kind create cluster --config kind-config.yaml
+      - kind create cluster --name staging --config kind-config.yaml
 
-  03-run-cloud-provider-kind:
-    desc: "Run sigs.k8s.io/cloud-provider-kind@latest to enable load balancer services with KinD"
+  staging:2-delete-cluster:
+    desc: Delete staging kind Kubernetes cluster
     cmds:
-      - sudo cloud-provider-kind
+      - kind delete cluster --name staging
 
-  04-delete-cluster:
-    desc: Delete and existing a kind Kubernetes cluster
+  prod:1-create-cluster:
+    desc: Create a Kubernetes cluster for production using kind
     cmds:
-      - kind delete cluster
+      - kind create cluster --name prod --config kind-config.yaml
+
+  prod:2-delete-cluster:
+    desc: Delete production kind Kubernetes cluster
+    cmds:
+      - kind delete cluster --name prod
