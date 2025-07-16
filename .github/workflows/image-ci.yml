@@ -90,6 +90,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Run integration tests with Docker Compose
+        working-directory: 02-app/
         run: |
           docker compose -f docker-compose.integration-test.yml \
             up --build --exit-code-from sut

@@ -61,7 +61,7 @@
     "seed": "npx sequelize-cli db:seed:all",
     "seed:migrate:reset": "npx sequelize-cli db:migrate:undo:all && npm run migrate && npm run seed",
     "prod-migration": "npm run migrate && npx sequelize-cli db:seed --seed ./src/database/seeders/99-prod-Merchant.js",
-    "ci-unit-test": "cross-env NODE_ENV=test mocha ./test/unit/index.js --testTimeout=10000 --exit",
+    "ci-unit-test": "NODE_ENV=test mocha ./test/unit/index.js --testTimeout=10000 --exit",
     "ci-integration-test": "cross-env NODE_ENV=test mocha ./test/integration/index.js --testTimeout=10000 --exit",
     "pretest": "cross-env NODE_ENV=test npm run seed:migrate:reset",
     "test": "cross-env NODE_ENV=test mocha ./test/main.js --testTimeout=10000 --exit",
