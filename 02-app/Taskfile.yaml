@@ -1,26 +1,22 @@
 version: "3"
 
 vars:
-  IMAGE_TAG: prod
   DB_USER: merchant
   DB_PASSWORD: foobarbaz
   DB_NAME: db
+  BACKEND_NETWORK: backend-network
   FRONTEND_IMAGE_REPO: davidalej/traveling-merchant-frontend
   BACKEND_IMAGE_REPO: davidalej/traveling-merchant-backend
-  BACKEND_NETWORK: backend-network
+  IMAGE_TAG: prod
 
 includes:
   frontend:
     taskfile: ./frontend/Taskfile.yaml
     dir: ./frontend
-    vars:
-      IMAGE_REPO: davidalej/traveling-merchant-frontend
 
   backend:
     taskfile: ./backend/Taskfile.yaml
     dir: ./backend
-    vars:
-      IMAGE_REPO: davidalej/traveling-merchant-backend
 
   db:
     taskfile: ./db/Taskfile.yaml

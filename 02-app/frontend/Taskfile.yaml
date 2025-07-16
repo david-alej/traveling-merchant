@@ -1,5 +1,9 @@
 version: "3"
 
+vars:
+  IMAGE_REPO: davidalej/traveling-merchant-frontend
+  IMAGE_TAG: prod
+
 tasks:
   build-container-image:
     desc: Build container image
