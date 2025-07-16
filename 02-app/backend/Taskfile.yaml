@@ -18,7 +18,7 @@ tasks:
       - |
         docker buildx build \
           -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
-          --target dev
+          --target dev \
           --push \
           .
 
