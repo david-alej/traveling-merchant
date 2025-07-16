@@ -12,6 +12,16 @@ tasks:
     cmds:
       - docker build -t {{.IMAGE_REPO}}{{.IMAGE_TAG}} .
 
+  build-testing-image:
+    desc: Build container testing image and push it to docker hub.
+    cmds:
+      - |
+        docker buildx build \
+          -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
+          --target dev
+          --push \
+          .
+
   build-container-image-multi-arch:
     desc: Build multi-arch container image
     cmds:
@@ -21,6 +31,11 @@ tasks:
           -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
           --push \
           .
+
+  run-ci-unit-tests:
+    desc: Run ci unit tests locally.
+    cmds:
+      - docker run --rm {{.IMAGE_REPO}}:{{.IMAGE_TAG}} npm run ci-unit-test
 
   run-migrations:
     desc: Execute migrations

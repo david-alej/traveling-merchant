@@ -42,21 +42,27 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Build Image
-        env:
-          IMAGE_TAG: ${{  github.run_id  }}
         working-directory: ${{ matrix.path }}
         run: |
-          task build-container-image-multi-arch IMAGE_TAG=${IMAGE_TAG}
+          task build-testing-image IMAGE_TAG=${{ github.run_id }}
 
   test-unit:
     name: Unit tests in Docker
     needs: [build-test-image]
     runs-on: ubuntu-latest
-
     permissions:
       packages: read
 
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Task
+        uses: arduino/setup-task@v2
+        with:
+          version: 3.x
+          repo-token: ${{secrets.ACTION_PAT}}
+
       - name: Login to Docker Hub
         uses: docker/login-action@v3
         with:
@@ -64,7 +70,8 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Unit Testing in Docker
-        run: docker run --rm davidalej/traveling-merchant-backend:"$GITHUB_RUN_ID" npm run ci-unit-test
+        working-directory: 02-app/backend
+        run: task run-ci-unit-tests IMAGE_TAG="$GITHUB_RUN_ID"
 
   test-integration:
     name: Integration tests in Compose
@@ -90,7 +97,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Run integration tests with Docker Compose
-        working-directory: 02-app/
+        working-directory: 02-app/backend
         run: |
           docker compose -f docker-compose.integration-test.yml \
             up --build --exit-code-from sut
@@ -121,7 +128,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PAT }}
 
       - name: Pull image to scan
-        run: docker pull davidalej/traveling-merchant-backend:"$GITHUB_RUN_ID"
+        run: docker pull ${{ matrix.image }}
 
       - name: Run Trivy for HIGH,CRITICAL CVEs and report (blocking)
         uses: aquasecurity/trivy-action@master
@@ -158,6 +165,7 @@ jobs:
         uses: arduino/setup-task@v2
         with:
           version: 3.x
+          repo-token: ${{secrets.ACTION_PAT}}
 
       - name: Generate Image Tag
         id: generate-image-tag
@@ -183,6 +191,7 @@ jobs:
         uses: arduino/setup-task@v2
         with:
           version: 3.x
+          repo-token: ${{secrets.ACTION_PAT}}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v3
@@ -215,6 +224,7 @@ jobs:
         uses: arduino/setup-task@v2
         with:
           version: 3.x
+          repo-token: ${{secrets.ACTION_PAT}}
 
       - name: Update Image Tags
         working-directory: 07-cicd/github-actions
