@@ -6,7 +6,6 @@ metadata:
   annotations:
     kluctl.io/hook: pre-deploy
     kluctl.io/hook-weight: "2"
-    kluctl.io/create-only: "true"
 spec:
   template:
     spec:

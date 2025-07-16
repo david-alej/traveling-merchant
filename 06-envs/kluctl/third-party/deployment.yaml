@@ -1,5 +1,6 @@
 deployments:
   - path: redis
+  - barrier: true
   - path: ngf-namespace
   - path: fabric
   - path: metallb
