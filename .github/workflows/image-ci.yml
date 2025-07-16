@@ -51,6 +51,7 @@ jobs:
     name: Unit tests in Docker
     needs: [build-test-image]
     runs-on: ubuntu-latest
+
     permissions:
       packages: read
 
@@ -68,6 +69,7 @@ jobs:
     name: Integration tests in Compose
     needs: [build-test-image]
     runs-on: ubuntu-latest
+    environment: test
     env:
       TESTING_IMAGE: davidalej/traveling-merchant-backend:${{ github.run_id }}
       COOKIES_SECRET: ${{ secrets.COOKIES_SECRET }}
@@ -95,6 +97,11 @@ jobs:
     name: Scan Image with Trivy
     needs: [build-test-image]
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        image:
+          - davidalej/traveling-merchant-backend:${{  github.run_id  }}
+          - davidalej/traveling-merchant-frontend:${{  github.run_id  }}
 
     permissions:
       contents: read
@@ -117,7 +124,7 @@ jobs:
       - name: Run Trivy for HIGH,CRITICAL CVEs and report (blocking)
         uses: aquasecurity/trivy-action@master
         with:
-          image-ref: davidalej/traveling-merchant-backend:${{ github.run_id }}
+          image-ref: ${{ matrix.image }}
           exit-code: "1"
           ignore-unfixed: true
           vuln-type: "os,library"
@@ -152,7 +159,7 @@ jobs:
 
       - name: Generate Image Tag
         id: generate-image-tag
-        working-directory: 14-cicd/github-actions
+        working-directory: 07-cicd/github-actions
         run: |
           image_tag=$(task generate-version-tag)
           echo "image_tag=$image_tag" >> $GITHUB_OUTPUT
@@ -208,7 +215,7 @@ jobs:
           version: 3.x
 
       - name: Update Image Tags
-        working-directory: 14-cicd/github-actions
+        working-directory: 07-cicd/github-actions
         env:
           IMAGE_TAG: ${{ needs.generate-image-tag.outputs.image_tag }}
         run: |
