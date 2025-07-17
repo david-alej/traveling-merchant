@@ -247,5 +247,4 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           base: main
-          token: ${{ secrets.ACTION_PAT }}
           title: "Update image tags to (${{ needs.generate-image-tag.outputs.image_tag }})"
