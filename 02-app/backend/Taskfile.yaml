@@ -18,7 +18,7 @@ tasks:
       - |
         docker buildx build \
           -t {{.IMAGE_REPO}}:{{.IMAGE_TAG}} \
-          --target dev \
+          --target test \
           --push \
           .
 
@@ -33,7 +33,7 @@ tasks:
           .
 
   run-ci-unit-tests:
-    desc: Run ci unit tests locally.
+    desc: Run ci unit tests.
     cmds:
       - docker run --rm {{.IMAGE_REPO}}:{{.IMAGE_TAG}} npm run ci-unit-test
 
