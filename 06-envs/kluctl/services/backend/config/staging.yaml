@@ -1,2 +1,2 @@
 backend:
-  version: prod # STAGING_IMAGE_TAG
+  version: 1.0.0 # STAGING_IMAGE_TAG
